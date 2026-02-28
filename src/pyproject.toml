@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "ghost-engine-gitlab-agent"
+version = "0.1.0"
+description = "SPECTER™ — GitLab Duo Agent Platform powered by Game Engine Prime™"
+authors = ["Google Antigravity <antigravity@ghostengine.dev>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.109.0"
+uvicorn = "^0.27.0"
+httpx = "^0.26.0"
+pydantic = "^2.5.3"
+python-dotenv = "^1.0.0"
+pytest = "^8.0.0"
+pytest-asyncio = "^0.23.5"
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

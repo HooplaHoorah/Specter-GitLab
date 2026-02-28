@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Engine GitLab Agent - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="top-nav glass-panel">
+            <div class="logo">
+                <span class="icon">👻</span>
+                <h1>SPECTER™</h1>
+                <span class="badge">GitLab AI Agent</span>
+                <span class="badge badge-tier">Tier: SPECTER Standard</span>
+            </div>
+            <div class="header-controls">
+                <div class="status-indicator">
+                    <span class="dot active"></span>
+                    <span class="status-text">System Active</span>
+                </div>
+                <!-- Demo Mode Toggle -->
+                <button id="demo-mode-toggle" class="btn btn-outline">⚡ Activate Demo Mode</button>
+            </div>
+        </header>
+
+        <!-- Main Layout -->
+        <main class="dashboard-grid">
+
+            <!-- Left Column: Activity & Entities -->
+            <div class="col-left">
+                <!-- Entity Stats Panel -->
+                <section class="panel glass-panel" id="entity-dashboard">
+                    <div class="panel-header">
+                        <h2>📊 Entity Dashboard</h2>
+                        <span class="subtitle">Active Tracked Entities</span>
+                    </div>
+                    <div class="stats-grid" id="stats-container">
+                        <div class="stat-card">
+                            <h3>Issues</h3>
+                            <div class="stat-value" id="stat-issues">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Merge Requests</h3>
+                            <div class="stat-value" id="stat-mrs">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Pipelines</h3>
+                            <div class="stat-value" id="stat-pipelines">0</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Configuration Panel -->
+                <section class="panel glass-panel" id="config-panel">
+                    <div class="panel-header">
+                        <h2>⚙️ System Configuration</h2>
+                    </div>
+                    <div class="config-list" id="config-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Pipeline Status Board -->
+                <section class="panel glass-panel" id="pipeline-board">
+                    <div class="panel-header">
+                        <h2>🚀 Pipeline Status</h2>
+                    </div>
+                    <div class="pipeline-list" id="pipeline-list">
+                        <!-- Populated by JS -->
+                        <div class="empty-state">No active pipelines</div>
+                    </div>
+                </section>
+
+                <!-- Duo Agent Tools Panel -->
+                <section class="panel glass-panel" id="duo-tools-panel">
+                    <div class="panel-header">
+                        <h2>🔧 Duo Agent Tools</h2>
+                        <span class="badge badge-duo">GitLab Duo Platform</span>
+                    </div>
+                    <div class="tools-grid" id="tools-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Activity Feed & AI Analysis -->
+            <div class="col-right">
+                <!-- AI Analysis Panel -->
+                <section class="panel glass-panel highlight-panel" id="ai-analysis-panel">
+                    <div class="panel-header">
+                        <h2>🧠 Latest AI Analysis</h2>
+                        <span class="badge badge-claude">Claude 3.5 Sonnet</span>
+                    </div>
+                    <div class="analysis-content" id="analysis-content">
+                        <div class="empty-state">Waiting for webhook events...</div>
+                    </div>
+                </section>
+
+                <!-- Activity Feed -->
+                <section class="panel glass-panel" id="activity-feed">
+                    <div class="panel-header">
+                        <h2>📡 Agent Activity Feed</h2>
+                        <span class="live-indicator">LIVE</span>
+                    </div>
+                    <div class="feed-list" id="feed-list">
+                        <!-- Populated by JS -->
+                        <div class="empty-state">Monitoring webhook endpoint...</div>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+
+        <footer class="bottom-nav glass-panel">
+            <div class="footer-content">
+                <p>powered by <strong>Game Engine Prime™</strong>. Trademark and Copyright 2026. <strong>Hoopla
+                        Hoorah</strong>. All rights reserved.</p>
+                <p class="trademark-notice">SPECTER™ and Ghost Engine Prime™ are trademarks of Hoopla Hoorah.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
