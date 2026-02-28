@@ -38,7 +38,7 @@ def health_check():
     return {"status": "healthy", "service": "ghost-engine-gitlab-agent"}
 
 def main():
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("PORT", 8080))
     logger.info(f"Starting Ghost Engine GitLab Duo Agent on port {port}...")
     uvicorn.run(app, host="0.0.0.0", port=port)
 

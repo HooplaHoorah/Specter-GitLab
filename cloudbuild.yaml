@@ -1,11 +1,11 @@
 steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/ghost-engine-prime/specter-repo/specter-agent:$SHORT_SHA', '.']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/ghost-engine-prime/specter-repo/specter-agent:latest', '.']
 
   # Push the container image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/ghost-engine-prime/specter-repo/specter-agent:$SHORT_SHA']
+    args: ['push', 'us-central1-docker.pkg.dev/ghost-engine-prime/specter-repo/specter-agent:latest']
 
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -15,12 +15,14 @@ steps:
       - 'deploy'
       - 'specter-agent'
       - '--image'
-      - 'us-central1-docker.pkg.dev/ghost-engine-prime/specter-repo/specter-agent:$SHORT_SHA'
+      - 'us-central1-docker.pkg.dev/ghost-engine-prime/specter-repo/specter-agent:latest'
       - '--region'
       - 'us-central1'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
+      - '--port'
+      - '8080'
 
 images:
-  - 'us-central1-docker.pkg.dev/ghost-engine-prime/specter-repo/specter-agent:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/ghost-engine-prime/specter-repo/specter-agent:latest'
