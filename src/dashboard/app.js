@@ -72,22 +72,42 @@ document.addEventListener('DOMContentLoaded', () => {
         MOCK_STATE // Final full state
     ];
 
+    function startStreaming() {
+        if (eventSource) {
+            eventSource.close();
+        }
+
+        console.log("🛰️ Connecting to live activity stream...");
+        eventSource = new EventSource('/api/v1/dashboard/stream');
+
+        eventSource.onmessage = (event) => {
+            if (demoMode) return; // Prioritize local demo sequence
+            try {
+                const state = JSON.parse(event.data);
+                renderDashboard(state);
+            } catch (e) {
+                console.error("Error parsing stream data:", e);
+            }
+        };
+
+        eventSource.onerror = (err) => {
+            console.warn("⚠️ Stream connection lost. Polling fallback...", err);
+            eventSource.close();
+            // Fallback to polling if SSE fails
+            setInterval(fetchState, 2000);
+        };
+    }
+
     async function fetchState() {
         try {
             const res = await fetch('/api/v1/dashboard/state');
             if (res.ok) {
                 const data = await res.json();
-                const currentStr = JSON.stringify(data);
-                if (currentStr !== previousStateStr) {
-                    renderDashboard(data);
-                    previousStateStr = currentStr;
-                }
+                renderDashboard(data);
             }
         } catch (err) {
-            // API unreachable — fall back to mock data if not already in demo mode
             if (!demoMode && previousStateStr === "") {
                 renderDashboard(MOCK_STATE);
-                previousStateStr = JSON.stringify(MOCK_STATE);
             }
         }
     }
@@ -207,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     });
 
-    // Start polling (will fall back to mock if server is unavailable)
-    setInterval(fetchState, 1500);
+    // Start streaming (will fall back to mock if server is unavailable)
+    startStreaming();
     fetchState();
 });

@@ -1,7 +1,11 @@
-from fastapi import APIRouter, Request, BackgroundTasks
+import os
+import hmac
+import hashlib
+from fastapi import APIRouter, Request, BackgroundTasks, HTTPException, Header
 from integrations.models import GitLabEventPayload
 from ecs.core import World, Entity
 import logging
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -34,13 +38,27 @@ async def process_event_in_ecs(payload: dict):
     ecs_world.tick()
 
 @router.post("/webhook")
-async def gitlab_webhook(request: Request, background_tasks: BackgroundTasks):
+async def gitlab_webhook(
+    request: Request, 
+    background_tasks: BackgroundTasks,
+    x_gitlab_token: Optional[str] = Header(None)
+):
     """
     GitLab webhook endpoint. Receives events and queues them for processing into the ECS.
+    Includes X-Gitlab-Token verification for security.
     """
-    # Parse the raw payload instead of relying fully on Pydantic initially
-    # to gracefully handle all the varying forms of GitLab webhooks.
-    payload = await request.json()
+    # Security: Verify GitLab Webhook Secret if configured
+    webhook_secret = os.getenv("GITLAB_WEBHOOK_SECRET")
+    if webhook_secret:
+        if not x_gitlab_token or x_gitlab_token != webhook_secret:
+            logger.warning("Unauthorized webhook attempt: Invalid or missing X-Gitlab-Token")
+            raise HTTPException(status_code=403, detail="Invalid X-Gitlab-Token")
+
+    try:
+        payload = await request.json()
+    except Exception as e:
+        logger.error(f"Failed to parse webhook JSON: {e}")
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
     
     # Add to background tasks so we return 200 immediately to GitLab
     background_tasks.add_task(process_event_in_ecs, payload)

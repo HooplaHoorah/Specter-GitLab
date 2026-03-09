@@ -1,4 +1,7 @@
-from fastapi import APIRouter
+import json
+import asyncio
+from fastapi import APIRouter, Request
+from fastapi.responses import StreamingResponse
 from ecs.core import World
 from ecs.components import (
     GitLabEventComponent,
@@ -9,6 +12,8 @@ from ecs.components import (
 )
 from typing import Dict, Any
 import sys
+import subprocess
+import os
 
 router = APIRouter()
 ecs_world: World = None
@@ -16,9 +21,6 @@ ecs_world: World = None
 def set_dashboard_world(world: World):
     global ecs_world
     ecs_world = world
-
-import subprocess
-import os
 
 @router.post("/demo/trigger")
 def trigger_demo():
@@ -30,7 +32,12 @@ def trigger_demo():
 def get_dashboard_state() -> Dict[str, Any]:
     if not ecs_world:
         return {"status": "error", "message": "World not initialized"}
+    return _calculate_state()
 
+def _calculate_state() -> Dict[str, Any]:
+    if not ecs_world:
+        return {"error": "World not initialized", "entities": {"issues": 0, "mrs": 0, "pipelines": 0}, "activity_feed": []}
+        
     state: Dict[str, Any] = {
         "activity_feed": [],
         "pipelines": [],
@@ -109,7 +116,31 @@ def get_dashboard_state() -> Dict[str, Any]:
             "url": pipe.web_url
         })
 
-    # Sort activity feed so latest is first (assuming IDs increase over time roughly, or we could add timestamp to components)
+    # Sort activity feed so latest is first
     state["activity_feed"].reverse()
-
     return state
+
+@router.get("/stream")
+async def stream_dashboard_state(request: Request):
+    """
+    Server-Sent Events (SSE) endpoint for real-time dashboard updates.
+    """
+    async def event_generator():
+        last_state_hash = None
+        while True:
+            if await request.is_disconnected():
+                break
+
+            current_state = _calculate_state()
+            current_state_hash = hash(json.dumps(current_state, sort_keys=True))
+
+            if current_state_hash != last_state_hash:
+                yield {
+                    "event": "message",
+                    "data": json.dumps(current_state)
+                }
+                last_state_hash = current_state_hash
+
+            await asyncio.sleep(1.0)
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")

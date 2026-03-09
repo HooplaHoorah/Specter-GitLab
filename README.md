@@ -52,3 +52,9 @@ docker run -p 8080:8080 specter
 ## License
 
 [MIT](LICENSE)
+
+---
+
+> **⚠️ NOTICE:** This project is provided for **evaluation and demonstration purposes only** as part of the GitLab AI Hackathon. It is not intended for production use. SPECTER™, Ghost Engine Prime™, and all associated marks are trademarks of Hoopla Hoorah.
+>
+> **© 2026 Hoopla Hoorah. All Rights Reserved.**

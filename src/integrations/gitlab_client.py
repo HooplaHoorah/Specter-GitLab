@@ -102,8 +102,15 @@ class GitLabClient:
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.get(url, headers=self._headers(), timeout=10.0)
+                if response.status_code == 401:
+                    logger.error("GitLab Authentication failed (401). Check GITLAB_TOKEN.")
+                elif response.status_code == 404:
+                    logger.error(f"GitLab Resource not found (404): {url}")
                 response.raise_for_status()
                 return response.json()
+        except httpx.HTTPStatusError as e:
+            logger.error(f"GitLab HTTP error {e.response.status_code}: {e.response.text}")
+            return None
         except Exception as e:
             logger.error(f"GitLab GET request failed: {e}")
             return None
@@ -112,8 +119,13 @@ class GitLabClient:
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.post(url, headers=self._headers(), json=json, timeout=10.0)
+                if response.status_code == 401:
+                    logger.error("GitLab Authentication failed (401). Check GITLAB_TOKEN.")
                 response.raise_for_status()
                 return response.json()
+        except httpx.HTTPStatusError as e:
+            logger.error(f"GitLab HTTP error {e.response.status_code}: {e.response.text}")
+            return None
         except Exception as e:
             logger.error(f"GitLab POST request failed: {e}")
             return None
@@ -122,8 +134,13 @@ class GitLabClient:
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.put(url, headers=self._headers(), json=json, timeout=10.0)
+                if response.status_code == 401:
+                    logger.error("GitLab Authentication failed (401). Check GITLAB_TOKEN.")
                 response.raise_for_status()
                 return response.json()
+        except httpx.HTTPStatusError as e:
+            logger.error(f"GitLab HTTP error {e.response.status_code}: {e.response.text}")
+            return None
         except Exception as e:
             logger.error(f"GitLab PUT request failed: {e}")
             return None
