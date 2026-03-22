@@ -1,4 +1,4 @@
-# SPECTER - GitLab Duo Agent Platform
+# SPECTER™ - GitLab Duo Agent Platform
 
 **SPECTER** (Software Process Engine for Contextual Task Execution and Response) is an AI-powered DevOps agent built on the GitLab Duo Agent Platform for the [GitLab AI Hackathon](https://gitlab.devpost.com/).
 
