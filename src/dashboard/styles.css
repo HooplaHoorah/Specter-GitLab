@@ -10,6 +10,7 @@
     --warning: #f59e0b;
     --danger: #ef4444;
     --border-color: rgba(255, 255, 255, 0.1);
+    --gold-glow: rgba(245, 158, 11, 0.4);
     --glass-blur: blur(12px);
 }
 
@@ -175,6 +176,17 @@ body {
     background: var(--accent-primary);
     color: white;
     box-shadow: 0 0 15px var(--accent-glow);
+}
+.btn-golden {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border: none;
+    color: #fffbeb;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.btn-golden:hover {
+    box-shadow: 0 0 20px var(--gold-glow);
+    transform: translateY(-1px);
 }
 
 /* Dashboard Grid Component */
